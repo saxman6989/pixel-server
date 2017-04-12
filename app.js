@@ -3,7 +3,7 @@
 const express = require('express');
 const path = require('path');
 
-const port = 5678
+const port = 5555
 const app = express();
 const io = require('socket.io').listen(app.listen(port, () => {
   console.log(`Running on the port ${port}`)
@@ -110,8 +110,7 @@ io.on('connection', socket => {
   socket.on('req.clear', () => {
     const index = getIndex(rooms, currentRoom)
     const roomInRooms = rooms[index]
-
-    if(data) roomInRooms.pos = []
+    roomInRooms.pos = []
     io.in(currentRoom).emit('res.clear')
   })
 })
