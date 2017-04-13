@@ -74,8 +74,7 @@ io.on('connection', socket => {
     let duplicate = rooms.find(obj => {
       return obj.name === roomInfo.room
     })
-
-    if(!duplicate) {
+if(!duplicate) {
       rooms.push(data)
       join(roomInfo.room)
       io.emit('res.setup', rooms)
@@ -93,8 +92,10 @@ io.on('connection', socket => {
   })
 
   socket.on('req.data', data => {
-    const index = getIndex(rooms, currentRoom)
+    const index = getIndex(rooms, data.room)
     const roomInRooms = rooms[index]
+
+	console.log(data)
 
     let exists = roomInRooms.pos.findIndex(obj => {
       return obj.dx === data.dx && obj.dy === data.dy
@@ -112,5 +113,22 @@ io.on('connection', socket => {
     const roomInRooms = rooms[index]
     roomInRooms.pos = []
     io.in(currentRoom).emit('res.clear')
+  })
+})
+
+app.get('/', (req, res) => {
+  function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+	  }
+  const options = {
+    root: `${__dirname}/assets`,
+	headers: {
+	  'x-timestamp': Date.now(),
+	  'x-sent': true
+	}
+  }
+  let n = getRandomInt(1,3)
+  res.sendFile(n + '.jpg', options, (err) => {
+    if(err) console.log(err)
   })
 })
